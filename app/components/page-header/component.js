@@ -10,6 +10,20 @@ import C from 'shared/utils/constants';
 import { get as getTree } from 'shared/utils/navigation-tree';
 import { run } from '@ember/runloop';
 
+const USER_MENU = [{
+  route:          'authenticated.apikeys',
+  icon:           'icon-key',
+  localizedLabel: 'nav.api.link',
+}, {
+  route:          'authenticated.node-templates',
+  icon:           'icon-host',
+  localizedLabel: 'nav.nodeTemplates.link',
+}, {
+  route:          'authenticated.prefs',
+  icon:           'icon-gear',
+  localizedLabel: 'nav.userPreferences.link',
+}];
+
 function fnOrValue(val, ctx) {
 
   if ( typeof val === 'function' ) {
@@ -36,16 +50,20 @@ export default Component.extend({
   layout,
   // Inputs
   pageScope:        null,
+  classNames:       null,
+  responsiveNav:    true,
 
   // Component options
   tagName:          'header',
-  classNames:       ['page-header'],
   dropdownSelector: '.navbar .dropdown',
 
+  navTree:          null,
   stacks:           null,
+  userMenuExpanded: false,
+  userMenus:        USER_MENU,
 
   // This computed property generates the active list of choices to display
-  navTree:       null,
+  logo:             alias('settings.ui-logo'),
   clusterId:        alias('scope.currentCluster.id'),
   cluster:          alias('scope.currentCluster'),
   projectId:        alias('scope.currentProject.id'),
@@ -83,6 +101,39 @@ export default Component.extend({
     }
   ),
 
+  routeDidChange: observer('application.currentRouteName', function() {
+
+    const currentRouteName = this.get('application.currentRouteName');
+
+    get(this, 'navTree').forEach((item) => {
+
+      if ( get(item, 'expanded') ) {
+
+        const submenuActive = (get(item, 'submenu') || []).some((subitem) => currentRouteName.startsWith(get(subitem, 'route')));
+
+        if ( !submenuActive ) {
+
+          set(item, 'expanded', false);
+
+        }
+
+      }
+
+    });
+    if ( get(this, 'userMenuExpanded') ) {
+
+      const submenuActive = get(this, 'userMenus').some((subitem) => currentRouteName.startsWith(get(subitem, 'route')));
+
+      if ( !submenuActive ) {
+
+        set(this, 'userMenuExpanded', false);
+
+      }
+
+    }
+
+  }),
+
   init() {
 
     this._super(...arguments);
@@ -98,7 +149,14 @@ export default Component.extend({
 
     run.scheduleOnce('render', () => {
 
+      if ( !get(this, 'responsiveNav') ) {
+
+        return;
+
+      }
+
       // responsive nav 63-87
+
       var responsiveNav = document.getElementById('js-responsive-nav');
 
       var toggleBtn = document.createElement('a');
@@ -159,7 +217,42 @@ export default Component.extend({
 
   },
 
+  actions: {
+    toogleExpand(selected) {
+
+      get(this, 'navTree').forEach((item) => {
+
+        if ( item === selected ) {
+
+          set(item, 'expanded', !get(item, 'expanded'));
+
+        } else {
+
+          set(item, 'expanded', false);
+
+        }
+
+      });
+
+      set(this, 'userMenuExpanded', false);
+
+    },
+
+    toogleUserMenu() {
+
+      get(this, 'navTree').forEach((item) => {
+
+        set(item, 'expanded', false);
+
+      });
+      set(this, 'userMenuExpanded', !get(this, 'userMenuExpanded'));
+
+    }
+  },
+
   updateNavTree() {
+
+    const currentRouteName = this.get('application.currentRouteName');
 
     let currentScope = get(this, 'pageScope');
 
@@ -197,6 +290,12 @@ export default Component.extend({
 
         }
 
+        if ( currentRouteName.startsWith(get(subitem, 'route')) ) {
+
+          set(item, 'expanded', true);
+
+        }
+
         setProperties(subitem, {
           localizedLabel: fnOrValue(get(subitem, 'localizedLabel'), this),
           label:          fnOrValue(get(subitem, 'label'), this),
@@ -214,7 +313,14 @@ export default Component.extend({
 
     set(this, 'navTree', out);
 
-  },
+    const userMenuActive = get(this, 'userMenus').some((subitem) => currentRouteName.startsWith(get(subitem, 'route')));
 
+    if ( userMenuActive ) {
+
+      set(this, 'userMenuExpanded', true);
+
+    }
+
+  },
   // Utilities you can use in the condition() function to decide if an item is shown or hidden,
 });

@@ -1411,6 +1411,10 @@ persistentVolumePage:
 
 userPreferencesPage:
   header: Preferences
+  menu:
+    header: Menu Positon
+    left: Left
+    top: Top
   theme:
     header: Theme
     light: Light
@@ -2885,6 +2889,7 @@ dangerZone:
     'system-default-registry': 'Private registry to be used for all system Docker images'
     'ui-index': 'HTML index location for the UI.'
     'ui-pl': 'Private-Label company name'
+    'ui-logo': 'Logo will be used in menu'
 
 editAccount:
   title: Edit Account
@@ -5159,6 +5164,7 @@ pageFooter:
   issues: File an Issue
   forums: Forums
   slack: Slack
+  support: Support
   download:
     link: Download CLI
     mac: macOS
@@ -5615,6 +5621,7 @@ nav:
     link: "Node Templates"
   api:
     link: "API & Keys"
+  userMenu: "User Menu"
   settings:
     tab: Settings
     advanced: Advanced

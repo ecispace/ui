@@ -31,11 +31,13 @@
             <option value="{{choice}}" selected={{eq choice value}}>{{choice}}</option>
           {{/each}}
         </select>
+      {{else if (eq model.kind 'image')}}
+        <button class="btn btn-sm bg-primary" {{action 'upload'}}>{{t 'uploadFile.label'}} <span class="icon icon-upload"></span></button>
       {{else}}
         {{input type="text" value=value class="form-control"}}
       {{/if}}
     </div>
   </div>
 </section>
-
+<input type="file" accept=".svg" class="hide">
 {{save-cancel editing=true saveDisabled=removing save="save" cancel="cancel"}}

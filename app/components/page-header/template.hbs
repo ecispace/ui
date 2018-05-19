@@ -1,5 +1,9 @@
 <nav class="clearfix responsive-nav" role="navigation" id="js-responsive-nav">
-  <a class="nav-logo logo-{{app.mode}} btn bg-transparent"><span class="sr-only">{{settings.appName}}</span></a>
+  {{#if logo}}
+    <a style="background-image: url({{logo}})" class="nav-logo logo-{{app.mode}} btn bg-transparent"><span class="sr-only">{{settings.appName}}</span></a>
+  {{else}}
+    <a class="nav-logo logo-{{app.mode}} btn bg-transparent"><span class="sr-only">{{settings.appName}}</span></a>
+  {{/if}}
 
   <ul class="nav-main nav-list no-inline-space">
     {{page-header-environment pageScope=pageScope}}

@@ -12,8 +12,9 @@ export default Component.extend(ModalBase, {
   layout,
   classNames: ['span-8', 'offset-2'],
 
-  value:      null,
-  removing:   false,
+  value:        null,
+  removing:     false,
+  _boundChange: null,
 
   model:      alias('modalService.modalOpts'),
 
@@ -26,6 +27,12 @@ export default Component.extend(ModalBase, {
 
   didInsertElement() {
 
+    this.set('_boundChange', (event) => {
+
+      this.change(event);
+
+    });
+    this.$('INPUT[type=file]').on('change', this.get('_boundChange'));
     next(() => {
 
       if ( this.isDestroyed || this.isDestroying ) {
@@ -67,6 +74,36 @@ export default Component.extend(ModalBase, {
 
       this.send('cancel');
 
+    },
+
+    upload() {
+
+      this.$('INPUT[type=file]')[0].click();
+
+    },
+  },
+
+  change(event) {
+
+    var input = event.target;
+
+    if ( input.files && input.files[0] ) {
+
+      let file = input.files[0];
+
+      var reader = new FileReader();
+
+      reader.onload = (event2) => {
+
+        var out = event2.target.result;
+
+        this.set('value', out);
+        input.value = '';
+
+      };
+      reader.readAsDataURL(file);
+
     }
+
   },
 });

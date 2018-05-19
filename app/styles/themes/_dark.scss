@@ -184,3 +184,7 @@ $pre-border-color                    : $light-grey;
 $stroke-color                        : black;
 $stroke-fill                         : black;
 $stroke-text                         : white;
+
+/*Page left menu*/
+$menu-active-bg                      : mix($user-btn, black, 80%);
+$menu-active-color                   : $info;
