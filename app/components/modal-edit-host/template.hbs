@@ -39,6 +39,14 @@
       }}
     </div>
   </div>
+  <div class="row inline-form">
+    <div class="col span-12">
+      {{form-node-taints
+         initialTaints=originalModel.labels
+         setTaints=(action 'setTaints')
+      }}
+    </div>
+  </div>
 </section>
 
 {{top-errors errors=errors}}

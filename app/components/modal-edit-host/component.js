@@ -49,6 +49,10 @@ export default Component.extend(ModalBase, NewOrEdit, ManageLabels, {
     setUserLabels(labels) {
       this.set('userLabels', labels);
     },
+
+    setTaints(taints) {
+      this.set('originalModel.nodeTaints', taints);
+    },
   },
 
   customNameObserver: on('init', observer('customName', function() {
